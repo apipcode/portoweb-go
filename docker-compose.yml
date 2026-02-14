@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  portfolio:
+    build: .
+    ports:
+      - "${PORT:-8080}:8080"
+    volumes:
+      # Persist database SQLite di host
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped

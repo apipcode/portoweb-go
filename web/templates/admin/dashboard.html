@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin — Portofolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Merriweather:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-left">
+            <h1 class="handwritten">📓 Admin Panel</h1>
+        </div>
+        <div class="header-right">
+            <span class="admin-user">Halo, {{.username}}!</span>
+            <a href="/" class="header-link">Lihat Portofolio</a>
+            <form method="POST" action="/admin/logout" style="display:inline">
+                <button type="submit" class="btn btn-small btn-outline">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        {{if .error}}<div class="alert alert-error">⚠ {{.error}}</div>{{end}}
+        {{if .success}}<div class="alert alert-success">✓ {{.success}}</div>{{end}}
+
+        <!-- Tab navigasi -->
+        <nav class="admin-tabs">
+            <button class="tab-btn active" data-tab="config">⚙ Konfigurasi</button>
+            <button class="tab-btn" data-tab="experiences">💼 Experience</button>
+            <button class="tab-btn" data-tab="projects">🚀 Projects</button>
+            <button class="tab-btn" data-tab="techstacks">🔧 Tech Stack</button>
+            <button class="tab-btn" data-tab="messages">✉ Pesan ({{len .messages}})</button>
+        </nav>
+
+        <!-- ============================================ -->
+        <!-- TAB: Konfigurasi Situs -->
+        <!-- ============================================ -->
+        <section class="tab-content active" id="tab-config">
+            <h2>Konfigurasi Situs</h2>
+            <form method="POST" action="/admin/config" class="admin-form">
+                <div class="form-row">
+                    <label>Nama:</label>
+                    <input type="text" name="name" value="{{index .siteConfig " name"}}" required>
+                </div>
+                <div class="form-row">
+                    <label>Tagline:</label>
+                    <input type="text" name="tagline" value="{{index .siteConfig " tagline"}}" required>
+                </div>
+                <div class="form-row">
+                    <label>About:</label>
+                    <textarea name="about" rows="4" required>{{index .siteConfig "about"}}</textarea>
+                </div>
+                <div class="form-row">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="{{index .siteConfig " email"}}">
+                </div>
+                <div class="form-row">
+                    <label>GitHub:</label>
+                    <input type="url" name="github" value="{{index .siteConfig " github"}}">
+                </div>
+                <div class="form-row">
+                    <label>LinkedIn:</label>
+                    <input type="url" name="linkedin" value="{{index .siteConfig " linkedin"}}">
+                </div>
+                <div class="form-row">
+                    <label>Foto URL:</label>
+                    <input type="url" name="photo_url" value="{{index .siteConfig " photo_url"}}">
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Konfigurasi</button>
+            </form>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- TAB: Experience -->
+        <!-- ============================================ -->
+        <section class="tab-content" id="tab-experiences">
+            <h2>Pengalaman Kerja</h2>
+
+            <!-- Form tambah baru -->
+            <details class="add-form-toggle">
+                <summary class="btn btn-outline">+ Tambah Experience Baru</summary>
+                <form method="POST" action="/admin/experience" class="admin-form">
+                    <div class="form-row">
+                        <label>Perusahaan:</label>
+                        <input type="text" name="company" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Posisi:</label>
+                        <input type="text" name="role" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Periode:</label>
+                        <input type="text" name="period" required placeholder="Jan 2023 - Sekarang">
+                    </div>
+                    <div class="form-row">
+                        <label>Deskripsi:</label>
+                        <textarea name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>Urutan:</label>
+                        <input type="number" name="sort_order" value="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </form>
+            </details>
+
+            <!-- Daftar experience -->
+            <div class="data-list">
+                {{range .experiences}}
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <strong>{{.Role}}</strong> @ {{.Company}}
+                        <span class="data-meta">{{.Period}}</span>
+                    </div>
+                    <p class="data-desc">{{.Description}}</p>
+                    <div class="data-actions">
+                        <details class="inline-edit">
+                            <summary class="btn btn-small">Edit</summary>
+                            <form method="POST" action="/admin/experience/{{.ID}}" class="admin-form inline-form">
+                                <input type="text" name="company" value="{{.Company}}" required>
+                                <input type="text" name="role" value="{{.Role}}" required>
+                                <input type="text" name="period" value="{{.Period}}" required>
+                                <textarea name="description" rows="3" required>{{.Description}}</textarea>
+                                <input type="number" name="sort_order" value="{{.SortOrder}}">
+                                <button type="submit" class="btn btn-small btn-primary">Update</button>
+                            </form>
+                        </details>
+                        <form method="POST" action="/admin/experience/{{.ID}}/delete" style="display:inline"
+                            onsubmit="return confirm('Hapus experience ini?')">
+                            <button type="submit" class="btn btn-small btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- TAB: Projects -->
+        <!-- ============================================ -->
+        <section class="tab-content" id="tab-projects">
+            <h2>Proyek</h2>
+
+            <details class="add-form-toggle">
+                <summary class="btn btn-outline">+ Tambah Project Baru</summary>
+                <form method="POST" action="/admin/project" class="admin-form">
+                    <div class="form-row">
+                        <label>Judul:</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Deskripsi:</label>
+                        <textarea name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>Teknologi:</label>
+                        <input type="text" name="tech_used" required placeholder="Go, React, PostgreSQL">
+                    </div>
+                    <div class="form-row">
+                        <label>Link:</label>
+                        <input type="url" name="link" placeholder="https://...">
+                    </div>
+                    <div class="form-row">
+                        <label>Gambar URL:</label>
+                        <input type="url" name="image_url">
+                    </div>
+                    <div class="form-row">
+                        <label>Urutan:</label>
+                        <input type="number" name="sort_order" value="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </form>
+            </details>
+
+            <div class="data-list">
+                {{range .projects}}
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <strong>{{.Title}}</strong>
+                    </div>
+                    <p class="data-desc">{{.Description}}</p>
+                    <p class="data-meta">Tech: {{.TechUsed}}</p>
+                    <div class="data-actions">
+                        <details class="inline-edit">
+                            <summary class="btn btn-small">Edit</summary>
+                            <form method="POST" action="/admin/project/{{.ID}}" class="admin-form inline-form">
+                                <input type="text" name="title" value="{{.Title}}" required>
+                                <textarea name="description" rows="3" required>{{.Description}}</textarea>
+                                <input type="text" name="tech_used" value="{{.TechUsed}}" required>
+                                <input type="url" name="link" value="{{.Link}}">
+                                <input type="url" name="image_url" value="{{.ImageURL}}">
+                                <input type="number" name="sort_order" value="{{.SortOrder}}">
+                                <button type="submit" class="btn btn-small btn-primary">Update</button>
+                            </form>
+                        </details>
+                        <form method="POST" action="/admin/project/{{.ID}}/delete" style="display:inline"
+                            onsubmit="return confirm('Hapus project ini?')">
+                            <button type="submit" class="btn btn-small btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- TAB: Tech Stack -->
+        <!-- ============================================ -->
+        <section class="tab-content" id="tab-techstacks">
+            <h2>Tech Stack</h2>
+
+            <details class="add-form-toggle">
+                <summary class="btn btn-outline">+ Tambah Tech Stack Baru</summary>
+                <form method="POST" action="/admin/techstack" class="admin-form">
+                    <div class="form-row">
+                        <label>Kategori:</label>
+                        <input type="text" name="category" required placeholder="Backend, Frontend, DevOps...">
+                    </div>
+                    <div class="form-row">
+                        <label>Nama:</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Deskripsi:</label>
+                        <textarea name="description" rows="3" required
+                            placeholder="Konteks penggunaan, bukan level skill"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>Urutan:</label>
+                        <input type="number" name="sort_order" value="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </form>
+            </details>
+
+            <div class="data-list">
+                {{range .techStacks}}
+                <div class="data-card">
+                    <div class="data-card-header">
+                        <strong>{{.Name}}</strong>
+                        <span class="data-meta">{{.Category}}</span>
+                    </div>
+                    <p class="data-desc">{{.Description}}</p>
+                    <div class="data-actions">
+                        <details class="inline-edit">
+                            <summary class="btn btn-small">Edit</summary>
+                            <form method="POST" action="/admin/techstack/{{.ID}}" class="admin-form inline-form">
+                                <input type="text" name="category" value="{{.Category}}" required>
+                                <input type="text" name="name" value="{{.Name}}" required>
+                                <textarea name="description" rows="3" required>{{.Description}}</textarea>
+                                <input type="number" name="sort_order" value="{{.SortOrder}}">
+                                <button type="submit" class="btn btn-small btn-primary">Update</button>
+                            </form>
+                        </details>
+                        <form method="POST" action="/admin/techstack/{{.ID}}/delete" style="display:inline"
+                            onsubmit="return confirm('Hapus tech stack ini?')">
+                            <button type="submit" class="btn btn-small btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- TAB: Pesan Kontak -->
+        <!-- ============================================ -->
+        <section class="tab-content" id="tab-messages">
+            <h2>Pesan Kontak</h2>
+
+            {{if .messages}}
+            <div class="data-list">
+                {{range .messages}}
+                <div class="data-card {{if not .IsRead}}unread{{end}}">
+                    <div class="data-card-header">
+                        <strong>{{.Name}}</strong>
+                        <span class="data-meta">{{.Email}}</span>
+                    </div>
+                    <p class="data-desc">{{.Message}}</p>
+                    <p class="data-meta">{{.CreatedAt.Format "02 Jan 2006 15:04"}}</p>
+                    <div class="data-actions">
+                        {{if not .IsRead}}
+                        <form method="POST" action="/admin/message/{{.ID}}/read" style="display:inline">
+                            <button type="submit" class="btn btn-small">Tandai Dibaca</button>
+                        </form>
+                        {{end}}
+                        <form method="POST" action="/admin/message/{{.ID}}/delete" style="display:inline"
+                            onsubmit="return confirm('Hapus pesan ini?')">
+                            <button type="submit" class="btn btn-small btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+            {{else}}
+            <p class="empty-state">Belum ada pesan masuk. 📭</p>
+            {{end}}
+        </section>
+    </main>
+
+    <script>
+        // Script sederhana untuk tab navigasi admin panel
+        (function () {
+            var tabs = document.querySelectorAll('.tab-btn');
+            var contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    var target = tab.getAttribute('data-tab');
+
+                    // Deactivate semua tab
+                    tabs.forEach(function (t) { t.classList.remove('active'); });
+                    contents.forEach(function (c) { c.classList.remove('active'); });
+
+                    // Activate tab yang diklik
+                    tab.classList.add('active');
+                    document.getElementById('tab-' + target).classList.add('active');
+                });
+            });
+
+            // Cek URL params untuk notifikasi
+            var params = new URLSearchParams(window.location.search);
+            var successMsg = params.get('success');
+            var errorMsg = params.get('error');
+            if (successMsg || errorMsg) {
+                // Auto-hide notifikasi setelah 3 detik
+                setTimeout(function () {
+                    var alerts = document.querySelectorAll('.alert');
+                    alerts.forEach(function (a) { a.style.display = 'none'; });
+                }, 3000);
+            }
+        })();
+    </script>
+</body>
+
+</html>

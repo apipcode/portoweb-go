@@ -1,0 +1,1230 @@
+/* =============================================
+   NOTEBOOK.CSS — Tema buku catatan portofolio
+   Desain: Notebook flip-book dengan CSS 3D transforms
+   Font: Caveat (handwriting), Merriweather (body), Fira Code (code)
+   ============================================= */
+
+/* ---- CSS Custom Properties (variabel warna) ---- */
+:root {
+    /* Warna mode terang — seperti buku sungguhan */
+    --paper: #f5f0e8;
+    --paper-dark: #ebe4d4;
+    --paper-lines: #c8d4e0;
+    --ink: #2c2416;
+    --ink-light: #5a4a36;
+    --ink-faded: #8a7a66;
+    --accent: #b85c3c;
+    --accent-dark: #8e4530;
+    --cover-bg: #3a2e24;
+    --cover-text: #f0e6d4;
+    --cover-accent: #c9a66b;
+    --margin-red: #e07060;
+    --bookmark: #c44040;
+    --shadow: rgba(44, 36, 22, 0.3);
+    --shadow-strong: rgba(44, 36, 22, 0.5);
+    --page-edge: #d4cbb8;
+    --highlight: #fef3c7;
+    --body-bg: #4a3f35;
+}
+
+/* Mode gelap — seperti baca buku di malam hari */
+[data-theme="dark"] {
+    --paper: #2a2520;
+    --paper-dark: #221e1a;
+    --paper-lines: #3a3530;
+    --ink: #d4c8b0;
+    --ink-light: #b0a490;
+    --ink-faded: #807060;
+    --accent: #d4845c;
+    --accent-dark: #e0956c;
+    --cover-bg: #1a1614;
+    --cover-text: #c8b898;
+    --cover-accent: #a08050;
+    --margin-red: #a05040;
+    --bookmark: #903030;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-strong: rgba(0, 0, 0, 0.7);
+    --page-edge: #3a3530;
+    --highlight: #3a3020;
+    --body-bg: #161210;
+}
+
+/* ---- Reset & Base ---- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
+    background-color: var(--body-bg);
+    color: var(--ink);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- Tipografi ---- */
+.handwritten {
+    font-family: 'Caveat', cursive;
+}
+
+code,
+.code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85em;
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.3;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent-dark);
+}
+
+/* =============================================
+   FLIP-BOOK — Struktur 3D
+   ============================================= */
+
+/* Scene: kontainer perspektif untuk efek 3D */
+.book-scene {
+    perspective: 1800px;
+    width: 720px;
+    height: 780px;
+    position: relative;
+    transition: width 0.5s, height 0.5s;
+    /* Smooth transition when resizing */
+}
+
+/* Buku: kontainer utama flip-book */
+.book {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* Halaman individual */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Halaman yang sudah dibalik */
+.page.flipped {
+    transform: rotateY(-180deg);
+}
+
+/* Sisi depan dan belakang halaman */
+.page-front,
+.page-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    overflow: hidden;
+    border-radius: 0 8px 8px 0;
+}
+
+.page-front {
+    z-index: 2;
+}
+
+.page-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+/* ---- Konten halaman ---- */
+.page-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Tekstur kertas */
+.paper {
+    background-color: var(--paper);
+    background-image:
+        /* Serat kertas halus */
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 28px,
+            var(--paper-lines) 28px,
+            var(--paper-lines) 29px);
+    box-shadow:
+        inset 0 0 40px rgba(0, 0, 0, 0.05),
+        inset -3px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Kertas bergaris (untuk halaman catatan) */
+.paper.lined {
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 28px,
+            var(--paper-lines) 28px,
+            var(--paper-lines) 29px);
+}
+
+/* Garis margin merah khas buku tulis */
+.margin-line {
+    position: absolute;
+    left: 52px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--margin-red);
+    opacity: 0.4;
+    z-index: 1;
+}
+
+/* Area konten di dalam halaman (setelah margin) */
+.page-inner {
+    padding: 30px 30px 30px 70px;
+    height: 100%;
+}
+
+/* Nomor halaman */
+.page-number {
+    position: absolute;
+    bottom: 12px;
+    right: 20px;
+    font-family: 'Caveat', cursive;
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+}
+
+/* =============================================
+   COVER — Sampul Buku
+   ============================================= */
+
+.cover-page {
+    background: var(--cover-bg);
+    background-image:
+        /* Tekstur kulit sampul */
+        radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 40%, rgba(0, 0, 0, 0.1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 8px 8px 0;
+    border-right: 4px solid rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Binding (tulang punggung buku) di sisi kiri */
+.cover-binding {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.4) 0%,
+            rgba(0, 0, 0, 0.1) 40%,
+            rgba(255, 255, 255, 0.05) 60%,
+            rgba(0, 0, 0, 0.2) 100%);
+}
+
+/* Tekstur halus di sampul */
+.cover-texture {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.cover-content {
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+}
+
+.cover-title {
+    font-family: 'Merriweather', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--cover-text);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cover-tagline {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: var(--cover-accent);
+    margin-bottom: 30px;
+}
+
+.cover-ornament {
+    font-size: 2rem;
+    color: var(--cover-accent);
+    margin-bottom: 30px;
+    opacity: 0.6;
+}
+
+.cover-hint {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--cover-accent);
+    opacity: 0.7;
+    animation: pulse-hint 2s ease-in-out infinite;
+}
+
+@keyframes pulse-hint {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+}
+
+/* =============================================
+   CHAPTER TABS — Tab bab di tepi halaman
+   ============================================= */
+
+.chapter-tab {
+    position: absolute;
+    top: 20px;
+    right: -1px;
+    background: var(--bookmark);
+    color: #fff;
+    padding: 4px 14px;
+    font-family: 'Caveat', cursive;
+    font-size: 0.85rem;
+    border-radius: 4px 0 0 4px;
+    box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.chapter-title {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+}
+
+/* =============================================
+   ABOUT — Halaman tentang
+   ============================================= */
+
+.about-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.photo-frame {
+    text-align: center;
+}
+
+.photo-frame img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid var(--ink-faded);
+    border-radius: 4px;
+    transform: rotate(-2deg);
+    box-shadow: 3px 3px 8px var(--shadow);
+}
+
+.photo-caption {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+    margin-top: 4px;
+}
+
+.about-text p {
+    font-size: 0.95rem;
+    color: var(--ink);
+    text-indent: 2em;
+}
+
+.margin-note {
+    position: absolute;
+    left: 8px;
+    bottom: 40px;
+    width: 45px;
+    font-size: 0.7rem;
+    color: var(--accent);
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    white-space: nowrap;
+}
+
+.social-link {
+    display: block;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    border-bottom: none;
+}
+
+.social-link:hover {
+    transform: translateX(5px);
+    transition: transform 0.2s;
+}
+
+.social-icon {
+    margin-right: 8px;
+}
+
+.about-links {
+    padding-top: 30px;
+}
+
+.about-links h3 {
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.doodle-corner {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.2rem;
+    color: var(--ink-faded);
+    opacity: 0.4;
+}
+
+/* =============================================
+   TIMELINE — Pengalaman kerja
+   ============================================= */
+
+.timeline {
+    position: relative;
+    padding-left: 24px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--ink-faded);
+    opacity: 0.3;
+}
+
+.timeline-entry {
+    position: relative;
+    margin-bottom: 24px;
+    padding-left: 16px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -22px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
+.timeline-role {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+}
+
+.timeline-company {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    font-style: italic;
+}
+
+.timeline-period {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-left: 8px;
+}
+
+.timeline-desc {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    margin-top: 6px;
+    line-height: 1.6;
+}
+
+/* =============================================
+   PROJECTS — Proyek portofolio
+   ============================================= */
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.project-card {
+    background: var(--paper-dark);
+    padding: 16px;
+    border-radius: 4px;
+    border-left: 3px solid var(--accent);
+    box-shadow: 2px 2px 6px var(--shadow);
+    transition: transform 0.2s;
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+}
+
+.project-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+.project-desc {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.tech-tag {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+    background: var(--highlight);
+    color: var(--ink-light);
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--page-edge);
+}
+
+.project-link {
+    font-size: 1rem;
+    color: var(--accent);
+}
+
+/* =============================================
+   TECH STACKS — Teknologi
+   ============================================= */
+
+.tech-stacks {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.tech-category {
+    margin-bottom: 4px;
+}
+
+.category-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+}
+
+.tech-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tech-item {
+    padding: 4px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px dotted var(--page-edge);
+}
+
+.tech-item strong {
+    color: var(--ink);
+}
+
+.tech-context {
+    color: var(--ink-light);
+    font-size: 0.82rem;
+}
+
+/* =============================================
+   CONTACT FORM — Form kontak
+   ============================================= */
+
+.contact-intro {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    margin-bottom: 18px;
+    font-style: italic;
+}
+
+.notebook-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+.form-group input,
+.form-group textarea {
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border: none;
+    border-bottom: 2px solid var(--page-edge);
+    background: transparent;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-bottom-color: var(--accent);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--ink-faded);
+    font-style: italic;
+}
+
+.submit-btn {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    padding: 10px 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    align-self: flex-start;
+}
+
+.submit-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.form-feedback {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    padding: 6px 0;
+    min-height: 30px;
+}
+
+.form-feedback.success {
+    color: #4a8c5c;
+}
+
+.form-feedback.error {
+    color: var(--bookmark);
+}
+
+/* =============================================
+   BACK COVER — Sampul belakang
+   ============================================= */
+
+.back-cover-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    gap: 30px;
+}
+
+.thanks-note {
+    font-size: 1.6rem;
+    color: var(--accent);
+}
+
+.thanks-note .small {
+    font-size: 1.1rem;
+    color: var(--ink-faded);
+    margin-top: 8px;
+}
+
+.easter-egg {
+    background: var(--highlight);
+    padding: 12px 20px;
+    border-radius: 4px;
+    border: 1px dashed var(--ink-faded);
+    max-width: 300px;
+    cursor: help;
+}
+
+.ee-text {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-faded);
+}
+
+.barcode {
+    font-size: 0.8rem;
+    color: var(--ink-faded);
+    letter-spacing: 3px;
+    line-height: 1.2;
+}
+
+.margin-note-inline {
+    font-size: 1.1rem;
+    color: var(--ink-faded);
+    padding: 30px 0;
+    text-align: center;
+}
+
+.dedication {
+    font-size: 1.4rem;
+    color: var(--ink-faded);
+    text-align: center;
+    padding: 60px 20px;
+    font-style: italic;
+}
+
+/* =============================================
+   NAVIGASI BUKU
+   ============================================= */
+
+.book-nav {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--cover-bg);
+    padding: 8px 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 16px var(--shadow-strong);
+    z-index: 100;
+}
+
+.nav-btn {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid var(--cover-accent);
+    color: var(--cover-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-btn:hover {
+    background: var(--cover-accent);
+    color: var(--cover-bg);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-indicator {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--cover-text);
+    min-width: 100px;
+    text-align: center;
+}
+
+/* =============================================
+   DARK MODE TOGGLE
+   ============================================= */
+
+.darkmode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cover-bg);
+    border: 2px solid var(--cover-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.darkmode-toggle:hover {
+    transform: scale(1.1) rotate(-15deg);
+}
+
+/* =============================================
+   MOBILE NAV — Navigasi untuk layar kecil
+   ============================================= */
+
+.mobile-nav {
+    display: none;
+}
+
+/* =============================================
+   Z-INDEX STACKING — Urutan tumpukan halaman
+   Halaman terakhir harus di bawah (z-index rendah)
+   agar halaman pertama tampil di atas saat belum dibalik
+   ============================================= */
+
+.page[data-page="0"] {
+    z-index: 6;
+}
+
+.page[data-page="1"] {
+    z-index: 5;
+}
+
+.page[data-page="2"] {
+    z-index: 4;
+}
+
+.page[data-page="3"] {
+    z-index: 3;
+}
+
+.page[data-page="4"] {
+    z-index: 2;
+}
+
+.page[data-page="5"] {
+    z-index: 1;
+}
+
+/* Saat dibalik, turunkan z-index agar tidak menutupi halaman di bawahnya */
+.page.flipped[data-page="0"] {
+    z-index: 1;
+}
+
+.page.flipped[data-page="1"] {
+    z-index: 2;
+}
+
+.page.flipped[data-page="2"] {
+    z-index: 3;
+}
+
+.page.flipped[data-page="3"] {
+    z-index: 4;
+}
+
+.page.flipped[data-page="4"] {
+    z-index: 5;
+}
+
+.page.flipped[data-page="5"] {
+    z-index: 6;
+}
+
+/* =============================================
+   EFEK BAYANGAN HALAMAN saat dibalik
+   ============================================= */
+
+.page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(to left,
+            rgba(0, 0, 0, 0.15) 0%,
+            transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    border-radius: 0 8px 8px 0;
+}
+
+.page:hover::after {
+    opacity: 1;
+}
+
+/* Bayangan tulang buku di sisi kiri */
+.page-front::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 100%;
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.12) 0%,
+            rgba(0, 0, 0, 0.03) 50%,
+            transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* =============================================
+   SCROLLBAR CUSTOM — agar cocok dengan tema
+   ============================================= */
+
+.page-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.page-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.page-content::-webkit-scrollbar-thumb {
+    background: var(--ink-faded);
+    border-radius: 3px;
+}
+
+.page-content::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-light);
+}
+
+/* =============================================
+   RESPONSIVE — Mobile (< 768px)
+   Di mobile, tampilkan sebagai scroll vertikal
+   ============================================= */
+
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: block;
+        padding: 0;
+        padding-bottom: 80px;
+    }
+
+    .book-scene {
+        perspective: none;
+        width: 100%;
+        height: auto;
+    }
+
+    .book {
+        display: flex;
+        flex-direction: column;
+        transform-style: flat;
+        position: relative;
+    }
+
+    .page {
+        position: relative;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        transform-style: flat;
+        cursor: default;
+    }
+
+    .page.flipped {
+        transform: none !important;
+    }
+
+    .page-front,
+    .page-back {
+        position: relative;
+        transform: none !important;
+        backface-visibility: visible;
+        border-radius: 0;
+        min-height: auto;
+    }
+
+    .page-content {
+        overflow: visible;
+        min-height: auto;
+    }
+
+    .page-inner {
+        padding: 24px 20px 24px 20px;
+    }
+
+    .margin-line {
+        display: none;
+    }
+
+    .chapter-tab {
+        position: relative;
+        right: auto;
+        top: auto;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .margin-note {
+        position: relative;
+        transform: none;
+        left: auto;
+        bottom: auto;
+        width: auto;
+        font-size: 0.85rem;
+        padding: 8px 0;
+    }
+
+    /* Page shadow effect — tidak perlu di mobile */
+    .page::after,
+    .page-front::before {
+        display: none;
+    }
+
+    /* Sembunyikan navigasi buku desktop */
+    .book-nav {
+        display: none;
+    }
+
+    /* Tampilkan navigasi mobile */
+    .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--cover-bg);
+        padding: 8px 4px;
+        justify-content: space-around;
+        z-index: 100;
+        box-shadow: 0 -2px 12px var(--shadow);
+    }
+
+    .mobile-nav-item {
+        font-size: 0.65rem;
+        color: var(--cover-text);
+        border: none;
+        text-align: center;
+        padding: 4px 2px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+    .mobile-nav-item.active,
+    .mobile-nav-item:hover {
+        opacity: 1;
+    }
+
+    /* Cover di mobile */
+    .cover-page {
+        border-radius: 0;
+        min-height: 70vh;
+        border-right: none;
+    }
+
+    .cover-title {
+        font-size: 1.8rem;
+    }
+
+    .cover-hint {
+        display: none;
+    }
+
+    /* Dark mode toggle — posisi berbeda di mobile */
+    .darkmode-toggle {
+        top: 12px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .book-scene {
+        width: 600px;
+        height: 560px;
+    }
+
+    .page-inner {
+        padding: 24px 24px 24px 60px;
+    }
+
+    .cover-title {
+        font-size: 1.8rem;
+    }
+}
+
+/* =============================================
+   VIEW TOGGLE — Mode Scroll Vertikal
+   ============================================= */
+
+/* Saat mode scrolling aktif (ditambahkan via JS) */
+body.view-scrolling {
+    overflow-y: auto;
+    display: block;
+    padding: 40px 20px;
+    height: auto;
+}
+
+body.view-scrolling .book-scene {
+    perspective: none;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    margin: 0 auto;
+}
+
+body.view-scrolling .book {
+    transform-style: flat;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    /* Jarak antar halaman */
+}
+
+body.view-scrolling .page {
+    position: relative;
+    width: 100%;
+    height: auto;
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: auto !important;
+    display: flex;
+    flex-direction: column;
+    /* Stack front and back */
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+body.view-scrolling .page-front,
+body.view-scrolling .page-back {
+    position: relative;
+    transform: none !important;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    backface-visibility: visible;
+    border-radius: 4px;
+    /* Sedikit rounded di mode scroll */
+    min-height: 600px;
+    /* Min height agar konten tidak gepeng */
+}
+
+body.view-scrolling .page-back {
+    border-top: 1px dashed var(--page-edge);
+    /* Pemisah visual */
+}
+
+body.view-scrolling .page-content {
+    overflow: visible;
+    /* Biarkan konten memanjang ke bawah */
+    height: auto;
+}
+
+body.view-scrolling .chapter-tab {
+    position: relative;
+    top: 0;
+    right: auto;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+body.view-scrolling .margin-line {
+    bottom: 0;
+    /* Pastikan garis margin sampai bawah */
+}
+
+/* Sembunyikan navigasi halaman saat mode scroll */
+body.view-scrolling .nav-prev,
+body.view-scrolling .nav-next,
+body.view-scrolling .nav-indicator,
+body.view-scrolling .nav-separator {
+    display: none;
+}
+
+/* Tombol toggle tetap muncul */
+body.view-scrolling .book-nav {
+    position: fixed;
+    bottom: 30px;
+    width: auto;
+    padding: 10px;
+    background: var(--cover-bg);
+    border-radius: 50%;
+}
+
+/* =============================================
+   ANIMASI TAMBAHAN
+   ============================================= */
+
+/* Efek hover pada halaman — sedikit terangkat */
+@media (min-width: 769px) {
+    .page:not(.flipped):hover {
+        box-shadow: 0 8px 24px var(--shadow);
+    }
+}
+
+/* Transisi smooth untuk dark mode */
+body,
+.paper,
+.cover-page,
+.book-nav,
+.mobile-nav,
+.darkmode-toggle {
+    transition: background-color 0.4s ease, color 0.3s ease;
+}

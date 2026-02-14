@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{.config.name}} — {{.config.tagline}}">
+    <title>{{.config.name}} — Portofolio</title>
+
+    <!-- Google Fonts: Caveat (handwriting) + Merriweather (body) + Fira Code (kode) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet utama -->
+    <link rel="stylesheet" href="/static/css/notebook.css">
+</head>
+
+<body>
+    <!-- Kontainer utama buku -->
+    <div class="book-scene">
+        <div class="book" id="book">
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 1: COVER / SAMPUL DEPAN -->
+            <!-- ============================================ -->
+            <div class="page" data-page="0">
+                <div class="page-front cover-page">
+                    <div class="cover-content">
+                        <div class="cover-binding"></div>
+                        <div class="cover-texture"></div>
+                        <h1 class="cover-title">{{.config.name}}</h1>
+                        <p class="cover-tagline">{{.config.tagline}}</p>
+                        <div class="cover-ornament">❧</div>
+                        <p class="cover-hint">Klik untuk membuka →</p>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <p class="handwritten dedication">"Setiap baris kode adalah paragraf dalam cerita yang saya
+                                tulis."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 2: ABOUT ME -->
+            <!-- ============================================ -->
+            <div class="page" data-page="1">
+                <div class="page-front">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="chapter-tab">Bab 1</div>
+                            <h2 class="chapter-title handwritten">Tentang Saya</h2>
+                            <div class="about-section">
+                                <div class="photo-frame">
+                                    {{if .config.photo_url}}
+                                    <img src="{{.config.photo_url}}" alt="Foto {{.config.name}}" loading="lazy">
+                                    {{else}}
+                                    <img src="https://ui-avatars.com/api/?name={{.config.name}}&background=random&size=200"
+                                        alt="Avatar Default" loading="lazy">
+                                    {{end}}
+                                    <span class="photo-caption handwritten">↑ itu saya</span>
+                                </div>
+                                <div class="about-text">
+                                    <p>{{.config.about}}</p>
+                                </div>
+                            </div>
+                            <div class="margin-note handwritten">
+                                📧 {{.config.email}}
+                            </div>
+                        </div>
+                        <div class="page-number">2</div>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="about-links">
+                                <h3 class="handwritten">Temukan saya di:</h3>
+                                {{if .config.github}}
+                                <a href="{{.config.github}}" target="_blank" class="social-link">
+                                    <span class="social-icon">⌨</span> GitHub
+                                </a>
+                                {{end}}
+                                {{if .config.linkedin}}
+                                <a href="{{.config.linkedin}}" target="_blank" class="social-link">
+                                    <span class="social-icon">💼</span> LinkedIn
+                                </a>
+                                {{end}}
+                            </div>
+                            <div class="doodle-corner">～♪♫</div>
+                        </div>
+                        <div class="page-number">3</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 3: EXPERIENCE -->
+            <!-- ============================================ -->
+            <div class="page" data-page="2">
+                <div class="page-front">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="chapter-tab">Bab 2</div>
+                            <h2 class="chapter-title handwritten">Pengalaman Kerja</h2>
+                            <div class="timeline">
+                                {{range $i, $exp := .experiences}}
+                                <div class="timeline-entry">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <h3 class="timeline-role">{{$exp.Role}}</h3>
+                                        <span class="timeline-company">@ {{$exp.Company}}</span>
+                                        <span class="timeline-period handwritten">{{$exp.Period}}</span>
+                                        <p class="timeline-desc">{{$exp.Description}}</p>
+                                    </div>
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="page-number">4</div>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper lined">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <p class="handwritten margin-note-inline">📝 catatan: pengalaman membentuk perspektif, bukan
+                                sekadar daftar riwayat hidup.</p>
+                        </div>
+                        <div class="page-number">5</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 4: PROJECTS -->
+            <!-- ============================================ -->
+            <div class="page" data-page="3">
+                <div class="page-front">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="chapter-tab">Bab 3</div>
+                            <h2 class="chapter-title handwritten">Proyek</h2>
+                            <div class="projects-list">
+                                {{range .projects}}
+                                <div class="project-card">
+                                    <h3 class="project-title">{{.Title}}</h3>
+                                    <p class="project-desc">{{.Description}}</p>
+                                    <div class="project-tech">
+                                        {{range split .TechUsed ","}}
+                                        <span class="tech-tag">{{trim .}}</span>
+                                        {{end}}
+                                    </div>
+                                    {{if .Link}}
+                                    <a href="{{.Link}}" target="_blank" class="project-link handwritten">→ lihat
+                                        proyek</a>
+                                    {{end}}
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="page-number">6</div>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <p class="handwritten margin-note-inline">✨ Setiap proyek punya cerita. Yang penting bukan
+                                hanya apa yang dibangun, tapi mengapa dan dampaknya.</p>
+                        </div>
+                        <div class="page-number">7</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 5: TECH STACK -->
+            <!-- ============================================ -->
+            <div class="page" data-page="4">
+                <div class="page-front">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="chapter-tab">Bab 4</div>
+                            <h2 class="chapter-title handwritten">Tech Stack</h2>
+                            <div class="tech-stacks">
+                                {{range $category, $items := .techByCategory}}
+                                <div class="tech-category">
+                                    <h3 class="category-title">{{$category}}</h3>
+                                    <ul class="tech-list">
+                                        {{range $items}}
+                                        <li class="tech-item">
+                                            <strong>{{.name}}</strong>
+                                            <span class="tech-context">— {{.description}}</span>
+                                        </li>
+                                        {{end}}
+                                    </ul>
+                                </div>
+                                {{end}}
+                            </div>
+                        </div>
+                        <div class="page-number">8</div>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper lined">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <p class="handwritten margin-note-inline">🔧 Teknologi hanyalah alat. Yang penting adalah
+                                masalah apa yang bisa dipecahkan dengannya.</p>
+                        </div>
+                        <div class="page-number">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- HALAMAN 6: CONTACT -->
+            <!-- ============================================ -->
+            <div class="page" data-page="5">
+                <div class="page-front">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="chapter-tab">Bab 5</div>
+                            <h2 class="chapter-title handwritten">Hubungi Saya</h2>
+                            <p class="contact-intro">Punya proyek menarik? Mau kolaborasi? Atau sekadar ngobrol soal
+                                teknologi? Tulis pesan di bawah!</p>
+                            <form id="contact-form" class="notebook-form">
+                                <div class="form-group">
+                                    <label for="contact-name" class="handwritten">Nama:</label>
+                                    <input type="text" id="contact-name" name="name" required minlength="2"
+                                        maxlength="100" placeholder="Siapa nama kamu?">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email" class="handwritten">Email:</label>
+                                    <input type="email" id="contact-email" name="email" required
+                                        placeholder="alamat@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message" class="handwritten">Pesan:</label>
+                                    <textarea id="contact-message" name="message" required minlength="10"
+                                        maxlength="2000" rows="5" placeholder="Tulis sesuatu..."></textarea>
+                                </div>
+                                <button type="submit" class="submit-btn handwritten">Kirim Pesan ✉</button>
+                                <div id="form-feedback" class="form-feedback"></div>
+                            </form>
+                        </div>
+                        <div class="page-number">10</div>
+                    </div>
+                </div>
+                <div class="page-back">
+                    <div class="page-content paper">
+                        <div class="margin-line"></div>
+                        <div class="page-inner">
+                            <div class="back-cover-content">
+                                <div class="thanks-note handwritten">
+                                    <p>Terima kasih sudah membaca sampai halaman terakhir! 📚</p>
+                                    <p class="small">— dibuat dengan ☕ dan Go</p>
+                                </div>
+                                <div class="easter-egg" title="Kamu menemukan easter egg! 🎉">
+                                    <span class="ee-text">404: Halaman berikutnya tidak ditemukan. Mungkin kita bisa
+                                        menulisnya bersama?</span>
+                                </div>
+                                <div class="barcode handwritten">
+                                    ||||| |||| ||||| ||<br>
+                                    ISBN: BUKAN-BUKU-BENERAN
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /#book -->
+    </div><!-- /.book-scene -->
+
+    <!-- Navigasi buku -->
+    <nav class="book-nav" id="book-nav">
+        <button class="nav-btn nav-prev" id="prev-page" title="Halaman sebelumnya">‹</button>
+        <span class="nav-indicator" id="page-indicator">Cover</span>
+        <button class="nav-btn nav-next" id="next-page" title="Halaman berikutnya">›</button>
+        <div class="nav-separator" style="width: 1px; height: 24px; background: rgba(0,0,0,0.2); margin: 0 12px;"></div>
+        <button class="nav-btn nav-toggle" id="view-toggle" title="Ubah Tampilan (Scroll/Buku)"
+            style="font-size: 1.2rem;">📱</button>
+    </nav>
+
+    <!-- Toggle dark mode -->
+    <button class="darkmode-toggle" id="darkmode-toggle" title="Mode gelap">🌙</button>
+
+    <!-- Navigasi mobile (hanya muncul di layar kecil) -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <a href="#cover" class="mobile-nav-item active" data-section="cover">📕 Cover</a>
+        <a href="#about" class="mobile-nav-item" data-section="about">👤 About</a>
+        <a href="#experience" class="mobile-nav-item" data-section="experience">💼 Exp</a>
+        <a href="#projects" class="mobile-nav-item" data-section="projects">🚀 Projects</a>
+        <a href="#techstack" class="mobile-nav-item" data-section="techstack">🔧 Tech</a>
+        <a href="#contact" class="mobile-nav-item" data-section="contact">✉ Contact</a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="/static/js/flipbook.js"></script>
+    <script src="/static/js/darkmode.js"></script>
+    <script src="/static/js/contact.js"></script>
+</body>
+
+</html>

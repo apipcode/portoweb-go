@@ -1,0 +1,443 @@
+/* =============================================
+   ADMIN.CSS — Styling admin panel
+   Clean, fungsional, dengan sentuhan notebook
+   ============================================= */
+
+/* ---- Variabel warna admin ---- */
+:root {
+    --admin-bg: #f8f5f0;
+    --admin-card: #ffffff;
+    --admin-border: #e0d8cc;
+    --admin-text: #2c2416;
+    --admin-text-light: #6a5f50;
+    --admin-accent: #b85c3c;
+    --admin-accent-hover: #9e4e32;
+    --admin-success: #4a8c5c;
+    --admin-danger: #c44040;
+    --admin-danger-hover: #a03030;
+}
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Merriweather', Georgia, serif;
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.handwritten {
+    font-family: 'Caveat', cursive;
+}
+
+/* ---- Header ---- */
+.admin-header {
+    background: #3a2e24;
+    color: #f0e6d4;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.admin-header h1 {
+    font-size: 1.6rem;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.85rem;
+}
+
+.admin-user {
+    opacity: 0.8;
+}
+
+.header-link {
+    color: #c9a66b;
+    text-decoration: none;
+    border-bottom: 1px dashed #c9a66b;
+}
+
+.header-link:hover {
+    color: #f0e6d4;
+}
+
+/* ---- Main ---- */
+.admin-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* ---- Alerts ---- */
+.alert {
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.alert-error {
+    background: #fef2f2;
+    color: var(--admin-danger);
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: var(--admin-success);
+    border: 1px solid #bbf7d0;
+}
+
+/* ---- Tabs ---- */
+.admin-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--admin-border);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: var(--admin-text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--admin-accent);
+}
+
+.tab-btn.active {
+    color: var(--admin-accent);
+    border-bottom-color: var(--admin-accent);
+    font-weight: 700;
+}
+
+/* ---- Tab Content ---- */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    color: var(--admin-text);
+}
+
+/* ---- Buttons ---- */
+.btn {
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--admin-accent);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--admin-accent-hover);
+}
+
+.btn-outline {
+    background: none;
+    border: 1px solid var(--admin-accent);
+    color: var(--admin-accent);
+}
+
+.btn-outline:hover {
+    background: var(--admin-accent);
+    color: #fff;
+}
+
+.btn-danger {
+    background: var(--admin-danger);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: var(--admin-danger-hover);
+}
+
+.btn-small {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+}
+
+/* ---- Forms ---- */
+.admin-form {
+    margin-top: 12px;
+}
+
+.form-row {
+    margin-bottom: 12px;
+}
+
+.form-row label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--admin-text-light);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.form-row input,
+.form-row textarea {
+    width: 100%;
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border: 1px solid var(--admin-border);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--admin-text);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+    border-color: var(--admin-accent);
+}
+
+/* ---- Data Cards ---- */
+.data-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.data-card {
+    background: var(--admin-card);
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--admin-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.data-card.unread {
+    border-left: 3px solid var(--admin-accent);
+    background: #fffbf0;
+}
+
+.data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.data-desc {
+    font-size: 0.85rem;
+    color: var(--admin-text-light);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.data-meta {
+    font-size: 0.8rem;
+    color: var(--admin-text-light);
+    opacity: 0.7;
+}
+
+.data-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* ---- Inline Edit ---- */
+.add-form-toggle {
+    margin-bottom: 16px;
+}
+
+.add-form-toggle[open] summary {
+    margin-bottom: 12px;
+}
+
+.inline-edit summary {
+    cursor: pointer;
+}
+
+.inline-form {
+    margin-top: 8px;
+    padding: 12px;
+    background: var(--admin-bg);
+    border-radius: 4px;
+}
+
+.inline-form input,
+.inline-form textarea {
+    width: 100%;
+    margin-bottom: 8px;
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border: 1px solid var(--admin-border);
+    border-radius: 4px;
+    resize: vertical;
+}
+
+/* ---- Login Page ---- */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--admin-card);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 4px;
+    color: var(--admin-accent);
+}
+
+.login-subtitle {
+    text-align: center;
+    color: var(--admin-text-light);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.login-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.login-form label {
+    font-size: 1.1rem;
+    color: var(--admin-accent);
+}
+
+.login-form input {
+    font-family: 'Merriweather', serif;
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    border: 1px solid var(--admin-border);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.login-form input:focus {
+    border-color: var(--admin-accent);
+}
+
+.login-form .submit-btn {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    padding: 10px;
+    background: var(--admin-accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.login-form .submit-btn:hover {
+    background: var(--admin-accent-hover);
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: var(--admin-text-light);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: var(--admin-accent);
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--admin-text-light);
+    font-style: italic;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .header-right {
+        font-size: 0.8rem;
+    }
+
+    .admin-tabs {
+        justify-content: center;
+    }
+
+    .tab-btn {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .data-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

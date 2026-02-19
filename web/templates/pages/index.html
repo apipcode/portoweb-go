@@ -15,7 +15,7 @@
         rel="stylesheet">
 
     <!-- Stylesheet utama -->
-    <link rel="stylesheet" href="/static/css/notebook.css">
+    <link rel="stylesheet" href="/static/css/notebook.css?v=2">
 </head>
 
 <body>
@@ -162,10 +162,17 @@
                                         <span class="tech-tag">{{trim .}}</span>
                                         {{end}}
                                     </div>
-                                    {{if .Link}}
-                                    <a href="{{.Link}}" target="_blank" class="project-link handwritten">→ lihat
-                                        proyek</a>
-                                    {{end}}
+                                    <div class="project-links">
+                                        {{if .Link}}
+                                        <a href="{{.Link}}" target="_blank" class="project-link handwritten">→ lihat
+                                            proyek</a>
+                                        {{end}}
+                                        {{if .GithubURL}}
+                                        <a href="{{.GithubURL}}" target="_blank" class="project-link handwritten">→
+                                            lihat
+                                            github</a>
+                                        {{end}}
+                                    </div>
                                 </div>
                                 {{end}}
                             </div>
@@ -293,7 +300,7 @@
         <span class="nav-indicator" id="page-indicator">Cover</span>
         <button class="nav-btn nav-next" id="next-page" title="Halaman berikutnya">›</button>
         <div class="nav-separator" style="width: 1px; height: 24px; background: rgba(0,0,0,0.2); margin: 0 12px;"></div>
-        <button class="nav-btn nav-toggle" id="view-toggle" title="Ubah Tampilan (Scroll/Buku)"
+        <button class="nav-btn nav-toggle" id="view-toggle" title="Mode HP (Scroll)"
             style="font-size: 1.2rem;">📱</button>
     </nav>
 

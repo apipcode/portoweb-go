@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS projects (
     description TEXT NOT NULL,        -- Deskripsi proyek (konteks bisnis & impact)
     tech_used TEXT NOT NULL,          -- Teknologi yang dipakai (comma-separated)
     link TEXT DEFAULT '',             -- Link ke demo/repo (opsional)
+    github_url TEXT DEFAULT '',       -- Link ke repository GitHub (opsional)
     image_url TEXT DEFAULT '',        -- URL gambar proyek (opsional)
     sort_order INTEGER DEFAULT 0,     -- Urutan tampil
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -60,12 +61,12 @@ CREATE TABLE IF NOT EXISTS site_config (
 -- Seed data default untuk konfigurasi situs
 -- =============================================
 INSERT OR IGNORE INTO site_config (key, value) VALUES
-    ('name', 'Nama Kamu'),
+    ('name', 'Habiburramdhan Lesmana'),
     ('tagline', 'Fullstack Developer — Menulis kode, merangkai solusi'),
     ('about', 'Halo! Saya adalah seorang developer yang percaya bahwa kode yang baik adalah kode yang bercerita. Setiap baris yang saya tulis punya tujuan, setiap fungsi punya makna. Saya suka membangun hal-hal yang berguna dan membuat teknologi jadi lebih mudah dipahami.'),
-    ('email', 'email@contoh.com'),
-    ('github', 'https://github.com/username'),
-    ('linkedin', 'https://linkedin.com/in/username'),
+    ('email', 'abiplesmana@gmail.com'),
+    ('github', 'https://github.com/apipcode'),
+    ('linkedin', 'https://www.linkedin.com/in/ramdhan-lesmana/'),
     ('photo_url', '');
 
 -- Seed data contoh pengalaman kerja

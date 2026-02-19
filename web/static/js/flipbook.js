@@ -185,10 +185,19 @@
     }, { passive: true });
 
     // ============================================
-    // === VIEW TOGGLE LOGIC ===
+    // === VIEW TOGGLE LOGIC (2-Way: Book <-> Scroll) ===
     const viewToggleBtn = document.getElementById('view-toggle');
     const body = document.body;
     let isScrollingView = false;
+
+    // Check initial state from class (if persisted)
+    if (body.classList.contains('view-scrolling')) {
+        isScrollingView = true;
+        if (viewToggleBtn) {
+            viewToggleBtn.textContent = '📖';
+            viewToggleBtn.title = 'Kembali ke Buku';
+        }
+    }
 
     if (viewToggleBtn) {
         viewToggleBtn.addEventListener('click', toggleView);
@@ -200,19 +209,17 @@
         if (isScrollingView) {
             body.classList.add('view-scrolling');
             viewToggleBtn.textContent = '📖'; // Icon buku untuk kembali
-            viewToggleBtn.title = 'Kembali ke Tampilan Buku';
-            // Reset flip state visually if needed, but CSS handles transforms
+            viewToggleBtn.title = 'Kembali ke Buku';
         } else {
             body.classList.remove('view-scrolling');
             viewToggleBtn.textContent = '📱'; // Icon HP untuk scroll
-            viewToggleBtn.title = 'Ubah ke Tampilan Scroll';
+            viewToggleBtn.title = 'Mode HP (Scroll)';
             // Restore flip state
             flipToPage(currentPage);
         }
     }
 
     // Handle initial state if needed (e.g. from URL hash or localStorage)
-    // For now, default is Flip-Book as requested.
 
     // ============================================
     // MOBILE NAVIGATION — Navigasi di layar kecil

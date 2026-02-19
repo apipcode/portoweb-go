@@ -151,6 +151,7 @@ func (s *Service) CreateProject(proj *model.Project) error {
 	proj.Title = sanitizeInput(proj.Title)
 	proj.Description = sanitizeInput(proj.Description)
 	proj.TechUsed = sanitizeInput(proj.TechUsed)
+	proj.GithubURL = sanitizeInput(proj.GithubURL)
 	return s.repo.CreateProject(proj)
 }
 
@@ -159,6 +160,7 @@ func (s *Service) UpdateProject(proj *model.Project) error {
 	proj.Title = sanitizeInput(proj.Title)
 	proj.Description = sanitizeInput(proj.Description)
 	proj.TechUsed = sanitizeInput(proj.TechUsed)
+	proj.GithubURL = sanitizeInput(proj.GithubURL)
 	return s.repo.UpdateProject(proj)
 }
 

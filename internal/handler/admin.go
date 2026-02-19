@@ -152,6 +152,7 @@ func (h *AdminHandler) CreateProject(c *gin.Context) {
 		Description: c.PostForm("description"),
 		TechUsed:    c.PostForm("tech_used"),
 		Link:        c.PostForm("link"),
+		GithubURL:   c.PostForm("github_url"),
 		ImageURL:    c.PostForm("image_url"),
 		SortOrder:   sortOrder,
 	}
@@ -173,6 +174,7 @@ func (h *AdminHandler) UpdateProject(c *gin.Context) {
 		Description: c.PostForm("description"),
 		TechUsed:    c.PostForm("tech_used"),
 		Link:        c.PostForm("link"),
+		GithubURL:   c.PostForm("github_url"),
 		ImageURL:    c.PostForm("image_url"),
 		SortOrder:   sortOrder,
 	}

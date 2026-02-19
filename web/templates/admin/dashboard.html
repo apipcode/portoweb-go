@@ -164,8 +164,12 @@
                         <input type="text" name="tech_used" required placeholder="Go, React, PostgreSQL">
                     </div>
                     <div class="form-row">
-                        <label>Link:</label>
+                        <label>Link (Live Demo):</label>
                         <input type="url" name="link" placeholder="https://...">
+                    </div>
+                    <div class="form-row">
+                        <label>GitHub URL:</label>
+                        <input type="url" name="github_url" placeholder="https://github.com/...">
                     </div>
                     <div class="form-row">
                         <label>Gambar URL:</label>
@@ -194,7 +198,8 @@
                                 <input type="text" name="title" value="{{.Title}}" required>
                                 <textarea name="description" rows="3" required>{{.Description}}</textarea>
                                 <input type="text" name="tech_used" value="{{.TechUsed}}" required>
-                                <input type="url" name="link" value="{{.Link}}">
+                                <input type="url" name="link" value="{{.Link}}" placeholder="Live Demo URL">
+                                <input type="url" name="github_url" value="{{.GithubURL}}" placeholder="GitHub URL">
                                 <input type="url" name="image_url" value="{{.ImageURL}}">
                                 <input type="number" name="sort_order" value="{{.SortOrder}}">
                                 <button type="submit" class="btn btn-small btn-primary">Update</button>

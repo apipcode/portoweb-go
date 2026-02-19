@@ -549,6 +549,20 @@ a:hover {
 .project-link {
     font-size: 1rem;
     color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.project-link:hover {
+    color: var(--cover-bg);
+    text-decoration: underline;
+}
+
+.project-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 /* =============================================
@@ -1134,21 +1148,19 @@ body.view-scrolling .book {
     transform-style: flat;
     display: flex;
     flex-direction: column;
-    gap: 60px;
-    /* Jarak antar halaman */
+    gap: 0;
+    /* Remove gap for seamless scroll */
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fdfbf7;
+    /* Consistent paper background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 body.view-scrolling .page {
-    position: relative;
-    width: 100%;
-    height: auto;
-    transform: none !important;
-    opacity: 1 !important;
-    z-index: auto !important;
-    display: flex;
-    flex-direction: column;
-    /* Stack front and back */
-    box-shadow: 0 10px 30px var(--shadow);
+    /* Unwrap page container to avoid layout issues */
+    display: contents;
 }
 
 body.view-scrolling .page-front,
@@ -1160,10 +1172,20 @@ body.view-scrolling .page-back {
     width: 100%;
     height: auto;
     backface-visibility: visible;
-    border-radius: 4px;
-    /* Sedikit rounded di mode scroll */
-    min-height: 600px;
-    /* Min height agar konten tidak gepeng */
+    border-radius: 0;
+    /* Seamless join */
+    box-shadow: none;
+    /* Seamless join */
+    margin: 0;
+    min-height: auto;
+    padding-bottom: 30px;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+    /* Subtle separator inside page */
+}
+
+body.view-scrolling .page-front {
+    border-bottom: none;
+    /* Merge front and back of same page */
 }
 
 body.view-scrolling .page-back {
@@ -1201,12 +1223,15 @@ body.view-scrolling .nav-separator {
 /* Tombol toggle tetap muncul */
 body.view-scrolling .book-nav {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     width: auto;
-    padding: 10px;
-    background: var(--cover-bg);
-    border-radius: 50%;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+/* Laptop Mode Removed */
 
 /* =============================================
    ANIMASI TAMBAHAN

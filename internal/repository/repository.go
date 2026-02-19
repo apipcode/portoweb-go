@@ -135,7 +135,7 @@ func (r *Repository) DeleteExperience(id int) error {
 // GetAllProjects mengambil semua proyek, diurutkan berdasarkan sort_order
 func (r *Repository) GetAllProjects() ([]model.Project, error) {
 	rows, err := r.db.Query(
-		"SELECT id, title, description, tech_used, link, image_url, sort_order, created_at, updated_at FROM projects ORDER BY sort_order ASC",
+		"SELECT id, title, description, tech_used, link, github_url, image_url, sort_order, created_at, updated_at FROM projects ORDER BY sort_order ASC",
 	)
 	if err != nil {
 		return nil, fmt.Errorf("gagal mengambil projects: %w", err)
@@ -145,7 +145,7 @@ func (r *Repository) GetAllProjects() ([]model.Project, error) {
 	var projects []model.Project
 	for rows.Next() {
 		var proj model.Project
-		if err := rows.Scan(&proj.ID, &proj.Title, &proj.Description, &proj.TechUsed, &proj.Link, &proj.ImageURL, &proj.SortOrder, &proj.CreatedAt, &proj.UpdatedAt); err != nil {
+		if err := rows.Scan(&proj.ID, &proj.Title, &proj.Description, &proj.TechUsed, &proj.Link, &proj.GithubURL, &proj.ImageURL, &proj.SortOrder, &proj.CreatedAt, &proj.UpdatedAt); err != nil {
 			return nil, fmt.Errorf("gagal scan project: %w", err)
 		}
 		projects = append(projects, proj)
@@ -157,8 +157,8 @@ func (r *Repository) GetAllProjects() ([]model.Project, error) {
 func (r *Repository) GetProjectByID(id int) (*model.Project, error) {
 	var proj model.Project
 	err := r.db.QueryRow(
-		"SELECT id, title, description, tech_used, link, image_url, sort_order, created_at, updated_at FROM projects WHERE id = ?", id,
-	).Scan(&proj.ID, &proj.Title, &proj.Description, &proj.TechUsed, &proj.Link, &proj.ImageURL, &proj.SortOrder, &proj.CreatedAt, &proj.UpdatedAt)
+		"SELECT id, title, description, tech_used, link, github_url, image_url, sort_order, created_at, updated_at FROM projects WHERE id = ?", id,
+	).Scan(&proj.ID, &proj.Title, &proj.Description, &proj.TechUsed, &proj.Link, &proj.GithubURL, &proj.ImageURL, &proj.SortOrder, &proj.CreatedAt, &proj.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("gagal mengambil project ID %d: %w", id, err)
 	}
@@ -168,8 +168,8 @@ func (r *Repository) GetProjectByID(id int) (*model.Project, error) {
 // CreateProject menambahkan proyek baru ke database
 func (r *Repository) CreateProject(proj *model.Project) error {
 	result, err := r.db.Exec(
-		"INSERT INTO projects (title, description, tech_used, link, image_url, sort_order) VALUES (?, ?, ?, ?, ?, ?)",
-		proj.Title, proj.Description, proj.TechUsed, proj.Link, proj.ImageURL, proj.SortOrder,
+		"INSERT INTO projects (title, description, tech_used, link, github_url, image_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		proj.Title, proj.Description, proj.TechUsed, proj.Link, proj.GithubURL, proj.ImageURL, proj.SortOrder,
 	)
 	if err != nil {
 		return fmt.Errorf("gagal membuat project: %w", err)
@@ -182,8 +182,8 @@ func (r *Repository) CreateProject(proj *model.Project) error {
 // UpdateProject memperbarui data proyek yang sudah ada
 func (r *Repository) UpdateProject(proj *model.Project) error {
 	_, err := r.db.Exec(
-		"UPDATE projects SET title=?, description=?, tech_used=?, link=?, image_url=?, sort_order=?, updated_at=? WHERE id=?",
-		proj.Title, proj.Description, proj.TechUsed, proj.Link, proj.ImageURL, proj.SortOrder, time.Now(), proj.ID,
+		"UPDATE projects SET title=?, description=?, tech_used=?, link=?, github_url=?, image_url=?, sort_order=?, updated_at=? WHERE id=?",
+		proj.Title, proj.Description, proj.TechUsed, proj.Link, proj.GithubURL, proj.ImageURL, proj.SortOrder, time.Now(), proj.ID,
 	)
 	if err != nil {
 		return fmt.Errorf("gagal update project ID %d: %w", proj.ID, err)

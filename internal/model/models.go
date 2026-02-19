@@ -23,6 +23,7 @@ type Project struct {
 	Description string    `json:"description"` // Deskripsi dengan konteks bisnis & impact
 	TechUsed    string    `json:"tech_used"`   // Teknologi yang digunakan (comma-separated)
 	Link        string    `json:"link"`        // Link ke demo/repo
+	GithubURL   string    `json:"github_url"`  // Link ke repository GitHub
 	ImageURL    string    `json:"image_url"`   // URL gambar proyek
 	SortOrder   int       `json:"sort_order"`  // Urutan tampil
 	CreatedAt   time.Time `json:"created_at"`
